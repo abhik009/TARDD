@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" th:href="@{assets/vendor/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+	<link rel="stylesheet" th:href="@{assets/vendor/fonts/circular-std/style.css}">
+	<link rel="stylesheet" th:href="@{assets/libs/css/style.css}">
+	<link rel="stylesheet" th:href="@{assets/vendor/fonts/fontawesome/css/fontawesome-all.css}">
+	<title>VO Details</title>
+</head>
+
+<body>
+	<div id="overlay" class="text-center">
+		<img th:src="@{assets/img/loader1.svg}" width="50%" alt="Loading..." />
+	</div>
+	<!-- main wrapper -->
+	<div class="dashboard-main-wrapper">
+		<!-- navbar -->
+		<div class="dashboard-header">
+			<nav class="navbar navbar-expand-lg bg-white fixed-top">
+				<a class="navbar-brand" href="index.html"><img class="nav-logo" th:src=@{assets/img/logo.png}></a>
+				<ul class="navbar-nav ml-auto navbar-right-top">
+					<li class="nav-item mr-2">
+						<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<button class="btn btn-outline-primary" id="clf-nav-btn" onclick="switchToCLF();">
+								<strong>संकुल</strong></button>
+							<button class="btn btn-outline-primary active mr-2" id="vo-nav-btn" onclick="switchToVO();">
+								<strong>ग्राम-संगठन</strong></button>
+							<button class="btn btn-outline-secondary" id="logout-nav-btn" onclick="logout();">
+								<i class="fas fa-power-off mr-2"></i>Logout</button>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!-- END NAVBAR -->
+		<!-- ======================main body======================================== -->
+		<div class="dashboard-wrapper">
+			<div class="dashboard-ecommerce">
+				<div class="container-fluid dashboard-content ">
+					<!-- ===================== Body Starts ================ -->
+					<!-- ========================== ROW-1 Starts ==================================== -->
+					<div class="ecommerce-widget">
+						<h4 class="pageheader-text">
+							<i class="fas fa-braille mr-3"></i><strong>ग्राम-संगठन की जानकारी</strong>
+						</h4>
+						<div class="row">
+							<div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12" th:each="item: ${data.row1}">
+								<div class="card border-3 border-top border-top-primary">
+									<div class="card-body">
+										<h5 class="text-muted"><strong th:text="${item.header}">नाम</strong></h5>
+										<div class="metric-value d-inline-block">
+											<h4 class="mb-1"><strong th:text="${item.value}">--</strong></h4>
+										</div>
+										<div
+											class="metric-label d-inline-block float-right text-primary font-weight-bold">
+											<i class="fas fa-database"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- ========================== ROW-1 Ends ==================================== -->
+						<!-- ========================== ROW-2 Starts ==================================== -->
+						<h4 class="pageheader-text">
+							<i class="fas fa-braille mr-3"></i><strong>परिवारों में योजनाओं की उपलब्धता</strong>
+						</h4>
+						<div class="row" id="row-2">
+							<div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12" th:each="item: ${data.row2}">
+								<div class="card border-3 border-top border-top-success">
+									<div class="card-body">
+										<h5 class="text-muted"><strong th:text="${item.header}"></strong></h5>
+										<div class="metric-value d-inline-block">
+											<h4 class="mb-1"><strong th:text="${item.value}"></strong></h4>
+										</div>
+										<div
+											class="metric-label d-inline-block float-right text-success font-weight-bold">
+											<i class="fas fa-chart-bar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- ========================== ROW-2 Ends ==================================== -->
+						<!-- ========================== ROW-3 Starts ================================== -->
+						<div class="row">
+							<div class="col-12">
+								<div class="card">
+									<h5 class="card-header"><strong> समूह वार योजनाओं की उपलब्धता</strong></h5>
+									<div class="card-body p-0">
+										<div class="table-responsive">
+											<table class="table border-0" id="voList">
+												<thead class="bg-light">
+													<tr>
+														<th data-field="name"
+															class="font-weight-bold btn-outline-warning">ग्राम-संगठन
+														</th>
+														<th data-field="voMemCount"
+															class="font-weight-bold text-center">कुल सदस्य</th>
+														<th data-field="mgnrega" class="text-center">
+															<span class="font-weight-bold">म.ग.न.रे.गा</span>
+															<br>Availability / Eligibility
+														</th>
+														<th data-field="ration" class="text-center">
+															<span class="font-weight-bold">राशन कार्ड</span>
+															<br>Availability / Eligibility
+														</th>
+														<th data-field="golden" class="text-center">
+															<span class="font-weight-bold">गोल्डन कार्ड</span>
+															<br>Availability / Eligibility
+														</th>
+														<th data-field="bpl" class="text-center">
+															<span class="font-weight-bold">बी.पी.एल कार्ड</span>
+															<br>Availability / Eligibility
+														</th>
+														<th data-field="apl" class="text-center">
+															<span class="font-weight-bold">ऐ.पी.ऐ कार्ड</span>
+															<br>Availability / Eligibility
+														</th>
+														<th data-field="antyodaya" class="text-center">
+															<span class="font-weight-bold">अन्तोदय कार्ड</span>
+															<br>Availability / Eligibility
+														</th>
+													</tr>
+												</thead>
+												<!-- <tbody>
+                                                     <tr>
+                                                        <td class="font-weight-bold"><a href="#">संगठन-1</a></td>
+                                                        <td class="text-center">200</td>
+                                                        <td class="text-center">id000001 </td>
+                                                        <td class="text-center">20</td>
+                                                        <td class="text-center">$80.00</td>
+                                                        <td class="text-center">27-08-2018 01:22:12</td>
+                                                        <td class="text-center">Patricia J. King </td>
+                                                        <td class="text-center"><span
+                                                                class="badge-dot badge-brand mr-1"></span>InTransit
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="9"><a href="#"
+                                                                class="btn btn-outline-light float-right">View-Details</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody> -->
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- ========================ROW-3 Ends====================================== -->
+					</div>
+				</div>
+			</div>
+			<!-- ============================================================== -->
+			<!-- footer -->
+			<!-- ============================================================== -->
+			<div class="footer">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+							Copyright © 2018 <a href="https://www.projectconcernindia.org" target="_blank">Project
+								Concern India</a>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end footer -->
+		</div>
+		<!-- end wrapper  -->
+	</div>
+	<!-- end main wrapper  -->
+
+	<!-- Optional JavaScript -->
+	<!-- jquery 3.3.1 -->
+	<script th:src="@{assets/vendor/jquery/jquery-3.3.1.min.js}"></script>
+	<!-- bootstap bundle js -->
+	<script th:src="@{assets/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+	<!-- bootstap table js -->
+	<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+	<!-- slimscroll js -->
+	<!-- <script src="assets/vendor/slimscroll/jquery.slimscroll.js"></script> -->
+	<!-- main js -->
+	<script th:src="@{assets/libs/js/main-js.js}"></script>
+	<!-- <script src="assets/libs/js/dashboard-index.js"></script> -->
+	<script th:src="@{assets/libs/js/dashboard-vo.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		function switchToVO() {
+			window.location.href = /*[[@{/vo}]]*/ 'default';
+		}
+		function switchToCLF() {
+			window.location.href = /*[[@{/clf}]]*/ 'default';
+		}
+		function logout() {
+			window.location.href = /*[[@{/logout}]]*/ 'default';
+		}
+
+		/*]]>*/
+	</script>
+</body>
+
+</html>
