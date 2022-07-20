@@ -1,10 +1,7 @@
 $(document).ready(function () {
     $('#voList').bootstrapTable({
-        data: dummyData
+        data: tableData
     })
-    // detailButton = '<tr><td colspan="9"><a href="#"class="btn btn-outline-light float-right">View-Details</a></td></tr>'
-    // tableBody = $("table tbody");
-    // tableBody.append(detailButton);
 
     $("#voList").on("click-row.bs.table", function (editable, columns, row) {
         console.log("columns:", JSON.stringify(columns));
@@ -21,7 +18,7 @@ $(document).ready(function () {
 
     setTimeout(() => {
         $('#overlay').remove();
-    }, 280);
+    }, 100);
 
 });
 

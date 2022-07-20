@@ -5,6 +5,7 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" th:href="@{assets/img/favicon.png}" type="image/x-icon">
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" th:href="@{assets/vendor/bootstrap/css/bootstrap.min.css}">
 	<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
@@ -12,42 +13,25 @@
 	<link rel="stylesheet" th:href="@{assets/libs/css/style.css}">
 	<link rel="stylesheet" th:href="@{assets/vendor/fonts/fontawesome/css/fontawesome-all.css}">
 	<title>CLF Details</title>
-	<script th:inline="javascript">
-		/*<![CDATA[*/
-		function switchToVO() {
-			window.location.href = /*[[@{/vo}]]*/ 'default';
-		}
-		function switchToCLF() {
-			window.location.href = /*[[@{/clf}]]*/ 'default';
-		}
-		function logout() {
-			window.location.href = /*[[@{/logout}]]*/ 'default';
-		}
-
-		/*]]>*/
-	</script>
 </head>
 
 <body>
 	<div id="overlay" class="text-center">
 		<img th:src="@{assets/img/loader1.svg}" width="50%" alt="Loading..." />
 	</div>
-	<!-- <span class="dashboard-spinner spinner-primary spinner-xxl" id="loader"></span> -->
 	<!-- main wrapper -->
 	<div class="dashboard-main-wrapper">
 		<!-- navbar -->
 		<div class="dashboard-header">
 			<nav class="navbar navbar-expand-lg bg-white fixed-top">
-				<a class="navbar-brand" th:href="@{/clf}"><img class="nav-logo" th:src=@{assets/img/logo.png}></a>
+				<a class="navbar-brand" th:href="@{/clf}"><img id="nav-logo" class="nav-logo"></a>
 				<ul class="navbar-nav ml-auto navbar-right-top">
 					<li class="nav-item mr-2">
-						<div class="btn-group btn-group-toggle" data-toggle="buttons">
-							<button class="btn btn-outline-primary active" id="clf-nav-btn" onclick="switchToCLF();">
-								<strong>संकुल</strong></button>
-							<button class="btn btn-outline-primary mr-2" id="vo-nav-btn" onclick="switchToVO();">
-								<strong>ग्राम-संगठन</strong></button>
+						<div class="btn-group btn-group-toggle rightbtn" data-toggle="buttons">
+							<button class="btn btn-outline-primary active" id="clf-nav-btn" onclick="switchToCLF();"><strong>संकुल</strong></button>
+							<button class="btn btn-outline-primary mr-2" id="vo-nav-btn" onclick="switchToVO();"><strong>ग्राम-संगठन</strong></button>
 							<button class="btn btn-outline-secondary" id="logout-nav-btn" onclick="logout();">
-								<i class="fas fa-power-off mr-2"></i>Logout</button>
+							<i class="fas fa-power-off mr-2"></i>Logout</button>
 						</div>
 					</li>
 				</ul>
@@ -109,7 +93,7 @@
 									<h5 class="card-header"><strong> ग्राम-संगठन वार योजनाओं की उपलब्धता</strong></h5>
 									<div class="card-body p-0">
 										<div class="table-responsive">
-											<table class="table border-0" id="voList">
+											<table class="table" id="clfTable">
 												<thead class="bg-light">
 													<tr>
 														<th data-field="name"
@@ -191,6 +175,16 @@
 	</div>
 	<!-- end main wrapper  -->
 
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		const clfURL = /*[[@{/clf}]]*/ 'default';
+		const voURL = /*[[@{/vo}]]*/ 'default';
+		const logoutURL = /*[[@{/logout}]]*/ 'default';
+		const tableData = /*[[${data.tableData}]]*/ 'default';
+
+		/*]]>*/
+	</script>
 	<!-- Optional JavaScript -->
 	<!-- jquery 3.3.1 -->
 	<script th:src="@{assets/vendor/jquery/jquery-3.3.1.min.js}"></script>
@@ -204,6 +198,46 @@
 	<script th:src="@{assets/libs/js/main-js.js}"></script>
 	<!-- <script src="assets/libs/js/dashboard-index.js"></script> -->
 	<script th:src="@{assets/libs/js/dashboard-clf.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		function switchToCLF() {
+			window.location.href = clfURL;
+		}
+		function switchToVO() {
+			window.location.href = voURL;
+		}
+		function logout() {
+			window.location.href = logoutURL;
+		}
+
+		$("#clfTable").on("click-row.bs.table", function (editable, columns, row) {
+			console.log("columns:", columns);
+			fetch(voURL, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({vo: columns.name })
+			}).then(response => response.json())
+				.then(data => {
+					console.log(data.status, " : ", data.message);
+					window.location.href = voURL;
+				})
+				.catch(error => console.log(error));
+		});
+
+		function changeLogo(screenWidth) {
+			if (screenWidth.matches) { // If media query matches
+				document.getElementById("nav-logo").src = /*[[@{assets/img/logo-globe.png}]]*/ 'default';
+			} else {
+				document.getElementById("nav-logo").src = /*[[@{assets/img/logo.png}]]*/ 'default';
+			}
+		}
+		const screenWidth = window.matchMedia("(max-width: 480px)");
+		changeLogo(screenWidth); // Call listener function at run time
+		screenWidth.addListener(changeLogo); // Attach listener function on state changes
+
+		/*]]>*/
+	</script>
 </body>
 
 </html>
